@@ -95,5 +95,5 @@ TEST_CASE("PrintLedger") {
   Atm atm;
   atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
   auto& transactions = atm.GetTransactions();
-  REQUIRE_THROWS_AS(atm.PrintLedger("./err.txt", 1234567, 123), std::invalid_argument);
+  REQUIRE_THROWS_AS(atm.PrintLedger("./error.txt", 1234567, 123), std::invalid_argument);
 }
