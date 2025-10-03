@@ -49,6 +49,8 @@ TEST_CASE("Example: Create a new account", "[ex-1]") {
   REQUIRE(accounts.size() == 1);
   std::vector<std::string> empty;
   REQUIRE(transactions[{12345678, 1234}] == empty);
+
+  REQUIRE_THROWS_AS(atm.RegisterAccount(12345678, 1234, "Sam Sep", 200), std::invalid_argument);
 }
 
 TEST_CASE("Example: Simple widthdraw", "[ex-2]") {
@@ -70,11 +72,20 @@ TEST_CASE("Empty & Negative Withdraw") {
   REQUIRE_THROWS_AS(atm.WithdrawCash(12345678, 1234, 400), std::runtime_error);
 }
 
-TEST_CASE("Deposit") {
+TEST_CASE("Invalid Deposit") {
   Atm atm;
   REQUIRE_THROWS_AS(atm.DepositCash(12345678, 123, 100.3), std::invalid_argument);
   atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
   REQUIRE_THROWS_AS(atm.DepositCash(12345678, 1234, -300), std::invalid_argument);
+}
+
+TEST_CASE("Wrong Deposit") {
+  Atm atm;
+  atm.RegisterAccount(12345678, 1234, "Sam", 300);
+  atm.DepositCash(12345678, 1234, 200);
+  auto accounts = atm.GetAccounts();
+  Account sam = accounts[{12345678, 1234}];
+  REQUIRE(sam.balance == 500);
 }
 
 TEST_CASE("Example: Print Prompt Ledger", "[ex-3]") {
